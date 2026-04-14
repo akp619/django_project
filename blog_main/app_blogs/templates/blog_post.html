@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <div class="row g-5">
+        <div class="col-md-8">
+              <article class="blog-post">
+                <h2 class="display-5 link-body-emphasis mb-1">{{post.title}}</h2>
+                <p class="blog-post-meta">
+                    {{post.created|date:"M d, Y"}} <a href="#"> {{post.author.username}} </a>
+                </p>
+                <p>
+                  {{ post.short_description }}
+                </p>
+                <hr />
+                <p>
+                  {{ post.blog_body }}
+                </p>
+              </article>
+        </div>
+    </div>
+{% endblock %}

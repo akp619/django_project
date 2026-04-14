@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <form method="POST" action="{% url 'deleteData' model id %}" readonly>
+        {% csrf_token %}
+        {{ form }}
+
+        <button type="Submit">Delete Record</button>
+        <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+    </form>
+{% endblock %}

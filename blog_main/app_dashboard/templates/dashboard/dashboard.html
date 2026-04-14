@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="row">
+<!--  left sidebar -->
+    <div class="col-md-3">
+        <div class="nav flex-column nav-pills bg-light" aria-orientation="vertical">
+            <a href="" class="nav-link text-dark bg-warning"> Dashboard </a>
+            {% for model_name in model_names %}
+                <a href="{% url 'modelData' model_name %}" class="nav-link text-dark"> {{ model_name }} </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-9"></div>
+</div>
+{% endblock %}

@@ -6,4 +6,12 @@
         <a href="https://x.com/mdo">@mdo</a>.
       </p>
       <p class="mb-0"><a href="#">Back to top</a></p>
-</footer>
+
+      <div class="row mt-2">
+          <div class="col">
+              {% for social in social_links %}
+                <a href="{{social.url}}"> {{social.name}} </a>
+                &nbsp;            &nbsp;
+              {% endfor %}
+          </div>
+      </div>

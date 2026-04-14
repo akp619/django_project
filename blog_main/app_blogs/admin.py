@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Category
-from .models import Blog
+from .models import Category, Blog, About, SocialLinks
 
 
 # to pre-populate slug [slug is like convert "test blog" to some readable url like "base_url/test-blog"]
@@ -15,3 +14,5 @@ class SlugAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Category)
 admin.site.register(Blog, SlugAdmin)
+admin.site.register(About)
+admin.site.register(SocialLinks)

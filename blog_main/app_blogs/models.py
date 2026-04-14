@@ -25,6 +25,10 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        print(self.name, "====repr===")
+        return self.name
+
 status_choices = ((0, "Draft"), (1, "Published"))
 
 class Blog(models.Model):
@@ -42,5 +46,39 @@ class Blog(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
 
+    # save() is when a new record is created
+    """
+    Upon calling we are updating the value of slug.
+    """
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
+
+
     def __str__(self):
         return self.title
+
+
+class About(models.Model):
+
+    name = models.CharField(max_length=100)
+    body = models.TextField(max_length=2000)
+
+    def __str__(self):
+        return self.name
+
+
+class SocialLinks(models.Model):
+
+    name = models.CharField(max_length=100)
+    url = models.URLField()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "social_links"   # to keep the correct name in admin dashboard
+
+

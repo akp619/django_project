@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="row">
+<!--  left sidebar -->
+    <div class="col-md-3">
+        <div class="nav flex-column nav-pills bg-light" aria-orientation="vertical">
+            <a href="{% url 'dashboard_home' %}" class="nav-link text-dark bg-warning"> Dashboard </a>
+            {% for model_name in model_names %}
+                <a href="{% url 'modelData' model_name %}" class="nav-link text-dark"> {{ model_name }} </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-9">
+
+        <a href="{% url 'create'|add:object_name %}">Create {{object_name}}</a>
+
+        <table class="table">
+          <thead>
+            <tr>
+              {% for field in fields_name %}
+                <th scope="col">{% if field != 'id' %} {{ field }} {% endif %}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+          {% for rec in records %}
+            <tr>
+                {% for value in rec.items %}
+                    {% if value.0 != 'id' %}
+                        <td>{{ value.1 }}</td>
+                    {% endif %}
+
+                    {% if value.0 == 'id' %}
+                        <td> <a href="{% url 'edit'|add:object_name value.1 %}">Edit</a> &nbsp;&nbsp; <a href="{% url 'deleteData' object_name value.1 %}">Delete</a></td>
+                    {% endif %}
+                {% endfor %}
+
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,8 @@
 
 {% block content %}
     <main class="form-signin w-100 m-auto">
-        <form action="" method="POST">
+        {% if type == 'create' %}
+        <form action="{% url 'createCategory' %}" method="POST">
             {% csrf_token %}
 
             <h1 class="h3 mb-3 fw-normal">Create Category</h1>
@@ -27,5 +28,35 @@
                 Create Category
             </button>
         </form>
+        {% endif %}
+
+
+        {% if type == 'edit' %}
+        <form action="{% url 'editCategory' category.id %}" method="POST">
+            {% csrf_token %}
+
+            <h1 class="h3 mb-3 fw-normal">Update Category</h1>
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+
+            <div class="form-floating">
+                <input type="text" class="form-control" value="{{category.name}}" name="name" id="floatingInput2" placeholder="Category Name" readonly>
+                <label for="floatingInput">Category Name</label>
+            </div>
+
+            <div class="form-floating">
+                <input type="text" name="description" class="form-control" value="{{category.description}}" id="floatingPassword2" placeholder="Description">
+                <label for="floatingPassword">Description</label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2 mt-3" type="submit">
+                Update Category
+            </button>
+        </form>
+        {% endif %}
     </main>
 {% endblock %}
