@@ -1,0 +1,43 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <p>Hello Aliens!!! Room """{{room}}""" will start in few minutes.</p>
+
+                <h4>Room Chats</h4>
+
+                {% for msg_data in messages_data %}
+                    <div>
+                        <small>@{{msg_data.user}} {{msg_data.created|timesince}} ago</small>
+                        <p>{{msg_data.body}}</p>
+                        {% if msg_data.user == request.user %}
+                            <a href="{% url 'deleteMessage' msg_data.id room.id %}">Delete Message</a>
+                        {% endif %}
+                        <hr/>
+                    </div>
+                {% endfor %}
+
+                {% if request.user.is_authenticated%}
+                    <div class="comment-form">
+                        <form method="POST" action="{% url 'room' room.id%}">
+                            {% csrf_token %}
+                            <input type="text" name="body" placeholder="Post your comment here...."/>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-4">
+                <h3>Participants</h3>
+                {% for user in participants %}
+                    <p>{{ user.username }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

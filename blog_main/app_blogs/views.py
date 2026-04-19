@@ -8,9 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q  # this is used for "OR" filter
 from django.apps import apps
-from django.http import HttpResponse, HttpResponseRedirect
-# Create your views here.
 
+# Create your views here.
 def home(request):
     # categories = Category.objects.all()
     #"filter" is used to filter out records and "slicing [:]" is used to limit the number of records.
@@ -129,6 +128,7 @@ def editBlog(request, blog_id):
     blog = Blog.objects.get(id=blog_id)
     if request.method == "POST":
         form = BlogForm(request.POST, instance=blog)
+        # slug = form.cleaned_data['title']  # this line will fetch the cleaned data from the form """other way is request.POST.get('title') just an approach.
         if form.is_valid():
             form.save()
     context = {'category': category, 'author': author, 'form': form, 'status': status, 'type': type, 'blog': blog}
@@ -143,6 +143,27 @@ def deleteBlog(request, model, id):
         get_record_data.delete()
         return redirect("modelData", model=MyModel.__name__)
     return render(request, "delete_record.html", context)
+
+def createUser(request):
+    type = 'create'
+    form = UserForm()
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("modelData", model=User.Meta.verbose_name_plural.capitalize())
+    return render(request, "user_form.html", {'form': form, 'type':type})
+
+def editUser(request, user_id):
+    type = 'edit'
+    user = User.objects.get(id=user_id)
+    form = UserForm(instance = user)
+    if request.method == "POST":
+        form = UserForm(request.POST, instance = user)
+        if form.is_valid():
+            form.save()
+            return redirect("modelData", model=User.Meta.verbose_name_plural.capitalize())
+    return render(request, "user_form.html", {'form': form, 'type':type, 'user':user})
 
 @login_required(login_url='login') #parameter "login_url" will redirect to login page is user access a unauthorized page.
 def categoryBlogs(request, category_id):

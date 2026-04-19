@@ -4,44 +4,119 @@
 
 <div class="row">
 <!--  left sidebar -->
-    <div class="col-md-3">
+    <div class="col-md-3 mt-4">
         <div class="nav flex-column nav-pills bg-light" aria-orientation="vertical">
             <a href="{% url 'dashboard_home' %}" class="nav-link text-dark bg-warning"> Dashboard </a>
             {% for model_name in model_names %}
-                <a href="{% url 'modelData' model_name %}" class="nav-link text-dark"> {{ model_name }} </a>
+                <a href="{% url 'modelData' model_name %}" class="nav-link text-dark" > {{ model_name.capitalize }} </a>
             {% endfor %}
         </div>
     </div>
 
     <div class="col-md-9">
+        <div class="col mb-4 mt-4">
+            <a class="btn btn-primary" href="{% url 'create'|add:object_name %}" style=" background: #212529; border: 1px solid white; ">Create {{object_name}}</a>
+        </div>
 
-        <a href="{% url 'create'|add:object_name %}">Create {{object_name}}</a>
+        {% if object_name != 'User' %}
+            <table class="table">
+              <thead>
 
-        <table class="table">
-          <thead>
-            <tr>
-              {% for field in fields_name %}
-                <th scope="col">{% if field != 'id' %} {{ field }} {% endif %}</th>
+                <tr>
+                    <th scope="col">#</th>
+                  {% for field in fields_name %}
+                    {% if field != 'id' %}
+                        <th scope="col"> {{ field.capitalize }} </th>
+                    {% endif %}
+                  {% endfor %}
+                    <th scope="col">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for rec in records %}
+                <tr>
+                    <td>{{ forloop.counter }} </td>
+                    {% for value in rec.items %}
+                        {% if value.0 != 'id' %}
+                            <td>{{ value.1 }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="{% url 'edit'|add:object_name rec.id %}" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </a> &nbsp;&nbsp;
+                        <a href="{% url 'deleteData' object_name rec.id %}" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </a>
+                    </td>
+
+                </tr>
               {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-          {% for rec in records %}
-            <tr>
-                {% for value in rec.items %}
-                    {% if value.0 != 'id' %}
-                        <td>{{ value.1 }}</td>
-                    {% endif %}
+              </tbody>
+            </table>
+        {% endif %}
 
-                    {% if value.0 == 'id' %}
-                        <td> <a href="{% url 'edit'|add:object_name value.1 %}">Edit</a> &nbsp;&nbsp; <a href="{% url 'deleteData' object_name value.1 %}">Delete</a></td>
-                    {% endif %}
-                {% endfor %}
+        {% if object_name == 'User' %}
+            <table class="table">
+              <thead>
 
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
+                <tr>
+                    <th scope="col"># 2178371</th>
+                  {% for field in fields_name %}
+                    {% if field != 'id' and field != 'password' and field != 'last_login' and field != 'date_joined' and field != 'is_superuser' %}
+                        <th scope="col"> {{ field.capitalize }} </th>
+                    {% endif %}
+                  {% endfor %}
+                    <th scope="col">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for rec in records %}
+                <tr>
+                    <td>{{ forloop.counter }} </td>
+                    {% for value in rec.items %}
+                        {% if value.0 != 'id' and value.0 != 'password' and value.0 != 'last_login' and value.0 != 'date_joined' and value.0 != 'is_superuser' %}
+                            <td>
+                                {% if value.0 == 'is_staff' or value.0 == 'is_active' %}
+                                    {% if value.1 == True %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                          <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                        </svg>
+                                    {% endif %}
+                                {% else%}
+                                    {{value.1}}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="{% url 'edit'|add:object_name rec.id %}" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </a> &nbsp;&nbsp;
+                        <a href="{% url 'deleteData' object_name rec.id %}" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                              <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5zm13-3H1v2h14zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </a>
+                    </td>
+
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

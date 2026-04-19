@@ -2,17 +2,34 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row mb-4">
 <!--  left sidebar -->
     <div class="col-md-3">
         <div class="nav flex-column nav-pills bg-light" aria-orientation="vertical">
             <a href="" class="nav-link text-dark bg-warning"> Dashboard </a>
-            {% for model_name in model_names %}
-                <a href="{% url 'modelData' model_name %}" class="nav-link text-dark"> {{ model_name }} </a>
+            {% for model_name in models %}
+                <a href="{% url 'modelData' model_name.0 %}" class="nav-link text-dark"> {{ model_name.0.capitalize }} </a>
             {% endfor %}
         </div>
     </div>
 
-    <div class="col-md-9"></div>
+    <div class="col-md-9">
+        <div class="row">
+
+            {% for model in models %}
+                <div class="col-6">
+                    <a href="{% url 'modelData' model.0 %}" style="text-decoration: none;">
+                        <div class="card" style="text-align:center;">
+                          <h5 class="card-header" >{{ model.0 }}</h5>
+                          <div class="card-body">
+                            <h5 class="card-title">{{ model.1 }}</h5>
+                          </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,20 +1,25 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.apps import apps
+from .utils import fetch_models
+from django.contrib.auth.models import User
 
+#
 
 # Create your views here.
-
 def dashboard_home(request):
-    # models = apps.get_models()  # will fetch all the models
-    # models = apps.get_app_config('app_blogs').get_models() # will fetch the models from a specific application
     context = {}
-    context['model_names'] = [model.__name__ for model in apps.get_app_config('app_blogs').get_models()]
+    models = fetch_models(app_name="app_blogs", model_name=False)
+    context['models'] = [(model.__name__,model.objects.count()) for model in models] + [(User.Meta.verbose_name_plural, User.objects.count())]
+    print("===context===", context)
     return render(request, "dashboard/dashboard.html", context)
 
 
 def fetch_models_data(request, model):
-    MyModel = apps.get_model(app_label='app_blogs', model_name=model)
+    if model.lower() == "users":
+        MyModel = User
+    else:
+        MyModel = fetch_models(app_name="app_blogs", model_name=model)
     exclude_fields = ['created', 'updated']
     # field_names = [field.verbose_name for field in MyModel._meta.fields if field.name not in exclude_fields ]
     relational_fields = []
@@ -32,7 +37,7 @@ def fetch_models_data(request, model):
         elif field.name not in exclude_fields:
             general_fields.append(field.name)
     context = {
-        "model_names" : [model.__name__ for model in apps.get_app_config('app_blogs').get_models()],
+        "model_names" : [model.__name__ for model in apps.get_app_config('app_blogs').get_models()] + [(User.Meta.verbose_name_plural)],
         "fields_name" : general_fields+relational_fields,
         "records" : MyModel.objects.values(*(general_fields+relational_fields)),
         "object" : MyModel,

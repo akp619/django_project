@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+    <p>Hello {{request.user}}!</p>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <div>
+                    <h3>Browse Topics</h3>
+                    <hr>
+                    {% include 'base_templates/topic_component.html' %}
+                </div>
+                <hr>
+                <div>
+                    <a href="{% url 'createRoom' %}">Create Room</a>
+                    <hr>
+                </div>
+                {% include 'base_templates/feed_component.html' %}
+            </div>
+
+            <div class="col-3">
+                {% include 'base_templates/activity_component.html' %}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% if page == 'login' %}
+    <div>
+        <form method="post" action="{% url 'userLogin' %}">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Username"/>
+            <input type="password" name="password" placeholder="Password"/>
+            <input type="submit" value="Login"/>
+
+            <p>Haven't signed up yet? <a href="{% url 'userRegister' %}">Register</a></p>
+        </form>
+    </div>
+
+{% else %}
+    <div>
+        <form method="POST" action="{% url 'userRegister' %}">
+            {% csrf_token %}
+
+            {{form.as_p}}     <!-- ".as_p" is adding a "paragraph" tag to the form -->
+            <br/>
+            <input type="submit" value="Register"/>
+
+            <p>Already signed up?<a href="{% url 'userLogin' %}">Login</a></p>
+        </form>
+    </div>
+{% endif %}
+
+{% endblock %}

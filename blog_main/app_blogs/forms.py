@@ -6,7 +6,7 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = "__all__"
-        exclude = ('password', 'last_login', 'is_superuser', 'groups', 'user_permissions', 'username', 'is_staff', 'is_active', 'date_joined')
+        exclude = ('last_login', 'is_superuser', 'user_permissions', 'date_joined', 'password')
 
 
 class CategoryForm(ModelForm):
