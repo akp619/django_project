@@ -1,4 +1,0 @@
-# Ignore specified files
-docker-compose.yml
-Dockerfile
-db.sqlite3
