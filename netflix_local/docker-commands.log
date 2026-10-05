@@ -1,0 +1,10 @@
+Setup MinIO in docker and connect to django:
+
+Command: docker run -p 9000:9000 -p 9001:9001 --name minio -e "MINIO_ROOT_USER=admin" -e "MINIO_ROOT_PASSWORD=password123" -v ~/minio/
+data:/data quay.io/minio/minio server /data --console-address ":9001"
+
+
+
+Setup redis in docker and connect to django:
+
+Command: docker run -p 6379:6379 --name redis -v "D://redis/data:/data" redis:7-alpine

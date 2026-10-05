@@ -1,0 +1,79 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+    <main class='bg-primary_black min-h-screen w-full'>
+
+        {% if movie.video_file %}
+        <section>
+            <video controls style="width: 100%;" id="video-player">
+              <source src="{{movie.video_file.url}}" type="video/mp4">
+            </video>
+        </section>
+        {% endif %}
+
+        <section class="" style="margin-top:50px;">
+            <div>
+                <h2 class="text-6xl font-semibold text-white my-4">
+                    {{movie.title}}
+                </h2>
+                <p class="font-medium text-white my-4">
+                    {{movie.description}}
+                </p>
+                <p class="font-medium text-white my-4">
+                    Starring : {{actors}}
+                </p>
+                <p class="font-medium text-white my-4">
+                    Directors : {{directors}}
+                </p>
+            </div>
+        </section> 
+
+        <section class="" style="margin-top:50px;">
+            <div>
+                <h6 class="font-semibold text-white my-4" style="font-size:larger;">
+                    More Like This
+                </h6>
+                <div class="flex justify-center  items-center min-w-full  movie_lis">
+                    {% for movie_genre in movies_with_same_genre %}
+                        <a href="{% url 'movieDetail' movie_genre.uuid %}">
+                            <div class="flex-shrink-0  h-40 m-4  bg-blue-500 rounded-md cursor-pointer overflow-hidden w-40" >
+                                <img src="{{movie_genre.poster}}" class="w-full h-full " alt="">
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    <script>
+        const nav = document.querySelector('nav')
+
+        document.addEventListener("scroll",e=>{
+            
+            if(scrollY>200){
+                nav.classList.add('bg-gray-900')
+          
+            }else{
+                nav.classList.remove('bg-gray-900')
+                
+            }
+        })
+
+        const video = document.getElementById("video-player");
+
+        video.addEventListener("play", function () {
+            console.log("Video started playing");
+        });
+
+        video.addEventListener("pause", function () {
+            console.log("Video paused");
+            console.log("Current position:", video.currentTime);
+        });
+
+        video.addEventListener("ended", function () {
+            console.log("Video completed");
+        });
+
+    </script>
+{% endblock %}

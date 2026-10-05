@@ -1,0 +1,140 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+    <main class='bg-primary_black min-h-screen w-full'>
+        <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex justify-end items-end bg-cover" style="background-image: url('{{banner_movie.poster}}');">
+            <div>
+                <h2 class="text-6xl font-semibold text-white my-4">
+                    {{banner_movie.title}}
+                </h2>
+                <p class=" w-11/12 md:w-5/12 font-medium text-white my-4">
+                    {{banner_movie.description}}
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                </p>
+
+<!--                <a href="{% url 'syncMovies' %}">Sync Movies</a>-->
+                <div class="flex my-4">
+
+                    <button class="flex items-center bg-crimson py-2 px-5 rounded-md" style="background-color:crimson;">
+                        <ion-icon name="play" class="text-2xl"></ion-icon>
+                        <a href="{% url 'movieDetail' banner_movie.uuid %}">
+                            <span class="ml-2 font-medium">
+                                Play
+                            </span>
+                        </a>
+                    </button>
+    
+                    <button class="ml-4 text-white flex items-center bg-gray-500 bg-opacity-80 py-2 px-5 rounded-md">
+                       
+                        <ion-icon name="information-circle-outline" class="text-2xl" ></ion-icon>
+                        <span class="ml-2 font-medium">
+                            More Info
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section> 
+        <section class='bg-primary_black  flex justify-center'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-gray-200 text-2xl font-medium">
+                    New on Netflix
+                </h2>
+                <div class="flex justify-center  items-center min-w-full  movie_lis">
+                    {% if new_movies %}
+                        {% for nm in new_movies %}
+                            <a href="{% url 'movieDetail' nm.uuid %}">
+                                <div class="flex-shrink-0  h-40 m-4  bg-blue-500 rounded-md cursor-pointer overflow-hidden w-40" >
+                                    <img src="{{nm.poster}}" class="w-full h-full " alt="">
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        <section class='bg-primary_black  flex justify-center'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-gray-200 text-2xl font-medium">
+                    Only on Netflix
+                </h2>
+                <div class="flex justify-center  items-center min-w-full  movie_lis">
+                    {% if only_on_netflix %}
+                        {% for oon in only_on_netflix %}
+                            <a href="{% url 'movieDetail' oon.uuid %}">
+                                <div class="flex-shrink-0  h-40 m-4  bg-blue-500 rounded-md cursor-pointer overflow-hidden w-40" >
+                                    <img src="{{oon.poster}}" class="w-full h-full " alt="">
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class='bg-primary_black  flex justify-center'>
+            <div class="p-8 w-10/12 relative" >
+                <h2 class="text-gray-200 text-2xl font-medium">
+                    Actions
+                </h2>
+                <div class="flex justify-center  items-center min-w-full  movie_lis">
+                    {% if actions %}
+                        {% for action in actions%}
+                            <a href="{% url 'movieDetail' action.uuid %}">
+                                <div class="flex-shrink-0  h-40 m-4  bg-blue-500 rounded-md cursor-pointer overflow-hidden w-40" >
+                                    <img src="{{action.poster}}" class="w-full h-full " alt="">
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class='bg-primary_black  flex justify-center'>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-md-6">
+                  <div class="search-container">
+                      <form method="POST" class="form-group">
+                          {% csrf_token %}
+                          <input type="text" class="form-control search-input" placeholder="Search..." name="search-query">
+                          <i class="fas fa-search search-icon"></i>
+                          <button type="submit" class="btn btn-success">Search</button>
+                      </form>
+
+                      {% if message %}
+                        <p> {{message}} </p>
+                      {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+        </section>
+
+        <style>
+            .search-container {
+                position: relative;
+            }
+
+            .search-input {
+                height: 50px;
+                border-radius: 30px;
+                padding-left: 35px;
+                border: none;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .search-icon {
+                position: absolute;
+                top: 50%;
+                left: 15px;
+                transform: translateY(-50%);
+                color: #888;
+            }
+        </style>
+
+    </main>
+
+
+{% endblock %}
