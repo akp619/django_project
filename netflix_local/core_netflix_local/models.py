@@ -251,6 +251,12 @@ class VideoFile(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+STATUS = [
+    ('Start', 'Start'),
+    ('In Progress', 'In Progress'),
+    ('Completed', 'Completed'),
+]
+
 class WatchHistory(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -258,6 +264,12 @@ class WatchHistory(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.DO_NOTHING, blank=True, null=True)
     genre = models.ManyToManyField(Genre, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+    progress = models.FloatField(null=True, blank=True)
+    total_duration = models.FloatField(null=True, blank=True)
+    type = models.CharField(choices=MOVIE_CHOICES, blank=True, null=True)
+    season = models.ForeignKey('Season', on_delete=models.CASCADE, blank=True, null=True)
+    episode = models.ForeignKey('Episode', on_delete=models.CASCADE, blank=True, null=True)
+    status = models.CharField(choices=STATUS, blank=True, null=True)
 
     def __str__(self):
         return f"[{self.user.username}][{self.profile.name}]-{self.date}"

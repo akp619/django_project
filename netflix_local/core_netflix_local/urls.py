@@ -12,4 +12,5 @@ urlpatterns = [
     path('movie-list/', views.movie_list, name="movieList"),
     path('sync-movie/', views.sync_movies, name="syncMovies"),
     path('movie-detail/<str:uuid>', views.movie_detail, name="movieDetail"),
+    path('record-watch-history/', views.record_watch_history, name="recordWatchHistory"),
 ]

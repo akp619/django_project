@@ -14,6 +14,9 @@ import re
 from .movie_n_series_script import main
 from django.core.cache import cache
 import time
+from django.http import HttpResponse
+import json
+
 
 @login_required(login_url="login")
 def index(request):
@@ -133,6 +136,10 @@ def profile_list(request):
     context = {'viewer_profiles': viewer_profiles}
     return render(request, 'profileList.html', context)
 
+def sync_movies(request):
+    main()
+    return render(request, 'movieList.html')
+
 @login_required(login_url="login")
 def movie_list(request):
     search_string = request.POST.get("search-query")
@@ -169,10 +176,49 @@ def movie_detail(request, uuid):
     movies_with_same_genre = Movie.objects.filter(genre__in=movie.genre.all()).distinct()[:8]
     context = {"movie": movie, "actors": actors, "directors": directors, "movies_with_same_genre": movies_with_same_genre}
     user_profile = ViewerProfile.objects.get(uuid=request.session.get("profile_id"))
-    WatchHistory.objects.create(user=request.user, profile=user_profile, movie=movie)
+    context["user_profile"] = user_profile.id
+    watch_history = WatchHistory.objects.filter(user=user_profile.user, profile=user_profile, movie=movie)
+    if watch_history:
+        context["video_resume_position"] = watch_history[0].progress if watch_history else 0
     return render(request, 'movieDetail.html', context)
 
-def sync_movies(request):
-    print("calling Main")
-    main()
-    return render(request, 'movieList.html')
+def record_watch_history(request):
+    data = json.loads(request.body)
+    movie_id = data.get("movie_id")
+    progress_seconds = data.get("progress_seconds")
+    duration_seconds = data.get("duration_seconds")
+    user_profile = ViewerProfile.objects.get(id = int(data.get("user_profile")))
+    movie = Movie.objects.get(uuid=movie_id)
+
+    watch_history = WatchHistory.objects.filter(user=user_profile.user, profile=user_profile, movie=movie)
+    print(watch_history, "==watch_history==")
+    if not watch_history:
+        # create or update watch history for the user profile
+        rec = WatchHistory.objects.create(
+            user=user_profile.user,
+            profile=user_profile,
+            movie=movie,
+            type=movie.movie_type,
+            status= "Start",
+            total_duration = duration_seconds,
+            progress = progress_seconds,
+        )
+        rec.genre.set(movie.genre.all())
+        return HttpResponse('Watch History Created Successfully.')
+    if progress_seconds == duration_seconds:
+        watch_history[0].status = "Completed"
+        watch_history[0].progress = progress_seconds
+    else:
+        watch_history[0].status = "In Progress"
+        watch_history[0].progress = progress_seconds
+
+    # Save the changes
+    watch_history[0].save()
+    return HttpResponse('Watch History Updated Successfully.')
+
+
+"""
+TODO:
+1. update the watch history by the time when video pause or completed. - done
+2. search for background jobs to run every 30s to capture the realtime progress of the video. - TODO
+"""

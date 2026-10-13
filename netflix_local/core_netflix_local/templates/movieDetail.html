@@ -10,7 +10,12 @@
             </video>
         </section>
         {% endif %}
-
+        <input type="hidden" id="movie-id" value="{{movie.uuid}}">
+        <input type="hidden" id="csrf-token" value="{{csrf_token}}">
+        <input type="hidden" id="user-profile" value="{{user_profile}}">
+        {% if video_resume_position %}
+            <input type="hidden" id="resume-position" value="{{video_resume_position}}">
+        {% endif %}
         <section class="" style="margin-top:50px;">
             <div>
                 <h2 class="text-6xl font-semibold text-white my-4">
@@ -26,8 +31,7 @@
                     Directors : {{directors}}
                 </p>
             </div>
-        </section> 
-
+        </section>
         <section class="" style="margin-top:50px;">
             <div>
                 <h6 class="font-semibold text-white my-4" style="font-size:larger;">
@@ -44,7 +48,8 @@
                 </div>
             </div>
         </section>
-        
+
+        <script src="{% static 'js/movie-detail-js/movie.js' %}"></script>
     </main>
     <script>
         const nav = document.querySelector('nav')
@@ -59,21 +64,5 @@
                 
             }
         })
-
-        const video = document.getElementById("video-player");
-
-        video.addEventListener("play", function () {
-            console.log("Video started playing");
-        });
-
-        video.addEventListener("pause", function () {
-            console.log("Video paused");
-            console.log("Current position:", video.currentTime);
-        });
-
-        video.addEventListener("ended", function () {
-            console.log("Video completed");
-        });
-
     </script>
 {% endblock %}
